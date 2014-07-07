@@ -1160,8 +1160,8 @@ typedef enum {
     ShortPixel
 } StorageType;
 
-MagickBooleanType ConstituteComponentGenesis();
-void ConstituteComponentTerminus();
+//MagickBooleanType ConstituteComponentGenesis();
+//void ConstituteComponentTerminus();
 Image *ConstituteImage(const size_t, const size_t, const char *, const StorageType, const void *, ExceptionInfo *);
 Image *PingImage(const ImageInfo *, ExceptionInfo *);
 Image *PingImages(const ImageInfo *, ExceptionInfo *);

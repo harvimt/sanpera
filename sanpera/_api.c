@@ -23,7 +23,7 @@ Quantum sanpera_to_quantum(long double value) {
 // This also insulates partially against the ABI changes in ImageMagick 7;
 // directly twiddling parts of PixelPacket will no longer work, but these
 // macros will.  TODO, obviously, handling arbitrary channels needs doing here.
-void sanpera_pixel_to_doubles(PixelPacket *pixel, double out[static 4]) {
+void sanpera_pixel_to_doubles(PixelPacket *pixel, double out[4]) {
     out[0] = (double)(GetPixelRed(pixel)) / QuantumRange;
     out[1] = (double)(GetPixelGreen(pixel)) / QuantumRange;
     out[2] = (double)(GetPixelBlue(pixel)) / QuantumRange;
@@ -31,7 +31,7 @@ void sanpera_pixel_to_doubles(PixelPacket *pixel, double out[static 4]) {
     out[3] = (double)(GetPixelAlpha(pixel)) / QuantumRange;
 }
 
-void sanpera_pixel_from_doubles(PixelPacket *pixel, double in[static 4]) {
+void sanpera_pixel_from_doubles(PixelPacket *pixel, double in[4]) {
     SetPixelRed(pixel, ClampToQuantum(in[0] * QuantumRange));
     SetPixelGreen(pixel, ClampToQuantum(in[1] * QuantumRange));
     SetPixelBlue(pixel, ClampToQuantum(in[2] * QuantumRange));
@@ -43,7 +43,7 @@ void sanpera_pixel_from_doubles(PixelPacket *pixel, double in[static 4]) {
 // which is similarly awkward to do from Python-land.  There's no equivalent
 // for returning only some channels because that doesn't make a lot of sense.
 void sanpera_pixel_from_doubles_channel(
-        PixelPacket *pixel, double in[static 4], ChannelType channels)
+        PixelPacket *pixel, double in[4], ChannelType channels)
 {
     if (channels & RedChannel)
         SetPixelRed(pixel, ClampToQuantum(in[0] * QuantumRange));
@@ -59,7 +59,7 @@ void sanpera_pixel_from_doubles_channel(
 
 // Same story for MagickPixelPacket, which is different in ways beyond my
 // understanding
-void sanpera_magick_pixel_to_doubles(MagickPixelPacket *pixel, double out[static 4]) {
+void sanpera_magick_pixel_to_doubles(MagickPixelPacket *pixel, double out[4]) {
     out[0] = (double)(GetPixelRed(pixel)) / QuantumRange;
     out[1] = (double)(GetPixelGreen(pixel)) / QuantumRange;
     out[2] = (double)(GetPixelBlue(pixel)) / QuantumRange;
@@ -67,7 +67,7 @@ void sanpera_magick_pixel_to_doubles(MagickPixelPacket *pixel, double out[static
     out[3] = (double)(GetPixelAlpha(pixel)) / QuantumRange;
 }
 
-void sanpera_magick_pixel_from_doubles(MagickPixelPacket *pixel, double in[static 4]) {
+void sanpera_magick_pixel_from_doubles(MagickPixelPacket *pixel, double in[4]) {
     SetPixelRed(pixel, ClampToQuantum(in[0] * QuantumRange));
     SetPixelGreen(pixel, ClampToQuantum(in[1] * QuantumRange));
     SetPixelBlue(pixel, ClampToQuantum(in[2] * QuantumRange));
@@ -76,7 +76,7 @@ void sanpera_magick_pixel_from_doubles(MagickPixelPacket *pixel, double in[stati
 }
 
 void sanpera_magick_pixel_from_doubles_channel(
-        MagickPixelPacket *pixel, double in[static 4], ChannelType channels)
+        MagickPixelPacket *pixel, double in[4], ChannelType channels)
 {
     if (channels & RedChannel)
         SetPixelRed(pixel, ClampToQuantum(in[0] * QuantumRange));
