@@ -37,24 +37,47 @@ def find_imagemagick_configuration():
             extra_link_args=shlex.split(env_ldflags or ''),
         )
 
-    # Easy way: pkg-config, part of freedesktop
-    # Note that ImageMagick ships with its own similar program `Magick-config`,
-    # but it's just a tiny wrapper around `pkg-config`, so why it even exists
-    # is a bit of a mystery.
-    try:
-        compile_args = check_output(['pkg-config', 'ImageMagick', '--cflags'])
-        link_args = check_output(['pkg-config', 'ImageMagick', '--libs'])
-    except OSError:
-        pass
-    except CalledProcessError:
-        # This means that pkg-config exists, but ImageMagick isn't registered
-        # with it.  Odd, but not worth giving up yet.
-        pass
-    else:
-        return dict(
-            extra_compile_args=shlex.split(compile_args),
-            extra_link_args=shlex.split(link_args),
-        )
+    if sys.platform == 'win32':
+        # Windows is weird, but hey if linux had a registry, you'd always know where stuff was installed. huh?
+        # yeah, probably still not worth it.
+        try:
+            import winreg    
+        except ImportError:
+            import _winreg as winreg
+
+        path = None
+        for gkey in (winreg.HKEY_CURRENT_USER, winreg.HKEY_LOCAL_MACHINE):
+            try:
+                key = winreg.OpenKey(gkey, 'SOFTWARE\\ImageMagick\\Current')
+                path = winreg.QueryValueEx(key, 'LibPath')[0]
+                break
+            except:
+                pass #FIXME
+            
+        if path is not None:
+            return dict(
+                extra_compile_args=['-I' + os.path.join(path, 'include')], 
+                extra_link_args=[path + '\\lib\\CORE_RL_%s_.lib' % lib for lib in ('wand', 'magick')],
+            )
+    else:    
+        # Easy way: pkg-config, part of freedesktop
+        # Note that ImageMagick ships with its own similar program `Magick-config`,
+        # but it's just a tiny wrapper around `pkg-config`, so why it even exists
+        # is a bit of a mystery.
+        try:
+            compile_args = check_output(['pkg-config', 'ImageMagick', '--cflags'])
+            link_args = check_output(['pkg-config', 'ImageMagick', '--libs'])
+        except OSError:
+            pass
+        except CalledProcessError:
+            # This means that pkg-config exists, but ImageMagick isn't registered
+            # with it.  Odd, but not worth giving up yet.
+            pass
+        else:
+            return dict(
+                extra_compile_args=shlex.split(compile_args),
+                extra_link_args=shlex.split(link_args),
+            )
 
     # TODO this could use more fallback, but IM builds itself with different
     # names (as of some recent version, anyway) depending on quantum depth et
