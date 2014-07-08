@@ -8,11 +8,11 @@ def demo_program():
 
     images = Image()
     for fn in filenames:
-        print "Reading %s ..." % (fn,)
+        print("Reading %s ..." % fn)
         #img = Image.from_filename(fn)
         #img = Image.from_buffer(open(fn).read())
         img = Image.read(fn)
-        print " %lu frames" % (len(img),)
+        print(" %lu frames" % len(img))
         images.extend(img)
 
     if not images:
@@ -25,9 +25,9 @@ def demo_program():
 
     # Write the thumbnail image sequence to file
     if thumbnails:
-        print "Writing %s ... %lu frames" % (out_filename,
-             len(thumbnails))
-        open(out_filename, 'w').write(thumbnails.to_buffer())
+        print("Writing %s ... %lu frames" % (out_filename,
+             len(thumbnails)))
+        open(out_filename, 'wb').write(thumbnails.to_buffer())
         #thumbnails.write_file(open(out_filename, 'w'))
         #thumbnails.write(out_filename)
 
