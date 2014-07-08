@@ -11,7 +11,7 @@ This is an **extreme** work in progress, but it does do a few useful things.  If
 
 ## Tech
 
-sanpera is written almost entirely in Cython, because hey, why not.
+sanpera is written with heavy use of [CFFI](http://cffi.readthedocs.org/), because hey, why not.
 
 It's powered by [ImageMagick](http://www.imagemagick.org/script/index.php), but it **is not** a simple wrapper; ImageMagick is merely an implementation detail.
 
