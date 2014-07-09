@@ -1,4 +1,5 @@
 from enum import EnumMeta, IntEnum
+from future.utils import with_metaclass
 
 from sanpera._api import ffi
 
@@ -20,7 +21,7 @@ class _CEnum(IntEnum):
 
 
 # Apply metaclass; syntax differs between 2 and 3.
-CEnum = CEnumMeta('CEnum', (_CEnum,), {})
+class CEnum(with_metaclass(CEnumMeta, _CEnum)): pass
 
 
 # ------------------------------------------------------------------------------

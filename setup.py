@@ -42,6 +42,7 @@ setup(
     },
     install_requires=BACKPORTS + [
         'cffi',
+		'future',
     ],
 
     ext_modules=[ffi.verifier.get_extension()],
