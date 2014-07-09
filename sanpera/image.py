@@ -513,22 +513,19 @@ class Image(object):
         ret = {}
 
         # This tricks IM into actually reading the EXIF properties...
-        lib.GetImageProperty(self._stack, "exif:*")
+        lib.GetImageProperty(self._stack, b"exif:*")
 
+        # XXX this only examines the top image uhoh.  do we care?  what
+        # happens if i load a GIF; what does each frame say?  what happens
+        # if i have multiple images with different props and save as one
+        # image?
         lib.ResetImagePropertyIterator(self._stack)
-        while True:
-            # XXX this only examines the top image uhoh.  do we care?  what
-            # happens if i load a GIF; what does each frame say?  what happens
-            # if i have multiple images with different props and save as one
-            # image?
-            prop = lib.GetNextImageProperty(self._stack)
-            if prop == ffi.NULL:
-                break
-
-            ret[ffi.string(prop)] = ffi.string(lib.GetImageProperty(self._stack, prop))
-
-        return ret
-
+        props = iter(lambda: lib.GetNextImageProperty(self._stack), ffi.NULL)
+        return {
+            ffi.string(prop).decode('ascii'):
+            ffi.string(lib.GetImageProperty(self._stack, prop)).decode('ascii')
+            for prop in props
+        }
 
     ### The good stuff: physical changes
     # TODO these are more complicated for multi-frame images.

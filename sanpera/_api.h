@@ -1172,6 +1172,26 @@ MagickBooleanType WriteImage(const ImageInfo *, Image *);
 MagickBooleanType WriteImages(const ImageInfo *, Image *, const char *, ExceptionInfo *);
 
 
+// -----------------------------------------------------------------------------
+// property.h
+
+char *GetNextImageProperty(const Image *);
+char *InterpretImageProperties(const ImageInfo *, Image *, const char *);
+char *RemoveImageProperty(Image *, const char *);
+
+const char *GetImageProperty(const Image *, const char *);
+const char *GetMagickProperty(const ImageInfo *, Image *,const char *);
+
+
+MagickBooleanType CloneImageProperties(Image *, const Image *);
+MagickBooleanType DefineImageProperty(Image *, const char *);
+MagickBooleanType DeleteImageProperty(Image *, const char *);
+MagickBooleanType FormatImageProperty(Image *, const char *, const char *,...);
+MagickBooleanType SetImageProperty(Image *, const char *, const char *);
+
+void DestroyImageProperties(Image *);
+void ResetImagePropertyIterator(const Image *);
+
 // =============================================================================
 // custom non-imagemagick stuff implemented in _api.c
 
