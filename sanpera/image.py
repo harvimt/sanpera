@@ -690,7 +690,6 @@ def gradient(size, from_color, to_color, image_cls=Image):
     return image
 
 
-# TODO this should probably not live in cython
 class BuiltinRegistry(object):
     # XXX possibly spruce this up a bit to work better with other kinds of
     # builtin enumerables
