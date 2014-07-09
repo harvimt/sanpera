@@ -679,15 +679,16 @@ class Image(object):
 
         return type(self)(new_image)
 
-
-# TODO does this belong here?  it IS a way to create an Image, i suppose
-def gradient(size, from_color, to_color, image_cls=Image):
-    image = image_cls.new(size)
-    # TODO not sure i want draw imported globally
-    from sanpera.draw import Brush
-    brush = Brush(image[0])
-    brush.gradient(from_color, to_color)
-    return image
+        
+    # TODO does this belong here?  it IS a way to create an Image, i suppose
+    @classmethod
+    def from_gradient(image_cls, size, from_color, to_color):
+        image = image_cls.new(size)
+        # TODO not sure i want draw imported globally
+        from sanpera.draw import Brush
+        brush = Brush(image[0])
+        brush.gradient(from_color, to_color)
+        return image
 
 
 class BuiltinRegistry(object):
