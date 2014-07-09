@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import contextlib
+import mimetypes
+mimetypes.init()
 
 from ._api import ffi, lib
 from .color import RGBColor
@@ -13,6 +15,7 @@ from .geometry import Rectangle
 from .geometry import Size
 from .geometry import origin
 from .pixel_view import PixelView
+from .imagemagick import IMAGE_FORMATS_BY_MIMETYPE
 
 try:
     import pathlib
@@ -312,15 +315,18 @@ class Image(object):
             # Force writing to a single file
             image_info.adjoin = lib.MagickTrue
 
+            if format == 'auto':
+                mimetype, mime_encoding = mimetypes.guess_type(filename)
+                format = IMAGE_FORMATS_BY_MIMETYPE[mimetype].name
             if format:
                 # If the caller provided an explicit format, pass it along
-                # Make sure not to overflow the char[]
-                # TODO maybe just error out when this happens
-                image_info.magick = format.encode('ascii')[:lib.MaxTextExtent]
+                # Error when the char[] overflows
+                magick = format.encode('ascii')
+                assert len(magick) < lib.MaxTextExtent
+                image_info.magick = magick
             elif self._frames[0]._frame.magick[0] == b'\0':
                 # Uhoh; no format provided and nothing given by caller
                 raise MissingFormatError
-            # TODO detect format from filename if explicitly asked to do so
 
             with self._link_frames(self._frames) as ptr:
                 lib.WriteImage(image_info, ptr)

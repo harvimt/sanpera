@@ -33,10 +33,11 @@ del _out
 
 ImageFormat = namedtuple(
     'ImageFormat',
-    ['name', 'description', 'can_read', 'can_write', 'supports_frames'])
+    ['name', 'description', 'can_read', 'can_write', 'supports_frames', 'mime_type'])
 
 def _get_formats():
     formats = dict()
+    formats_by_mime = dict()
 
     num_formats = ffi.new("size_t *")
 
@@ -47,15 +48,17 @@ def _get_formats():
             lib.RelinquishMagickMemory)
 
     for i in range(num_formats[0]):
-        name = ffi.string(magick_infos[i].name).decode('latin-1')
-        formats[name.lower()] = ImageFormat(
-            name=name,
+        imageformat = ImageFormat(
+            name=ffi.string(magick_infos[i].name).decode('latin-1'),
             description=ffi.string(magick_infos[i].description).decode('latin-1'),
             can_read=magick_infos[i].decoder != ffi.NULL,
             can_write=magick_infos[i].encoder != ffi.NULL,
             supports_frames=magick_infos[i].adjoin != 0,
+            mime_type=ffi.string(magick_infos[i].mime_type).decode('ascii') if magick_infos[i].mime_type else None,
         )
+        formats[imageformat.name.lower()] = imageformat
+        formats_by_mime[imageformat.mime_type] = imageformat
 
-    return formats
+    return formats, formats_by_mime
 
-IMAGE_FORMATS = _get_formats()
+IMAGE_FORMATS, IMAGE_FORMATS_BY_MIMETYPE = _get_formats()

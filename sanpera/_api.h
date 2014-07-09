@@ -225,6 +225,7 @@ typedef struct {
     char *version;
     char *note;
     char *module;
+	char* mime_type;
 
     DecodeImageHandler *decoder;
     EncodeImageHandler *encoder;
