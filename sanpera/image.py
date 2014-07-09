@@ -3,16 +3,16 @@ from __future__ import division
 
 import contextlib
 
-from sanpera._api import ffi, lib
-from sanpera.color import RGBColor
-from sanpera.exception import EmptyImageError
-from sanpera.exception import MissingFormatError
-from sanpera.exception import magick_raise
-from sanpera.exception import magick_try
-from sanpera.geometry import Rectangle
-from sanpera.geometry import Size
-from sanpera.geometry import origin
-from sanpera.pixel_view import PixelView
+from ._api import ffi, lib
+from .color import RGBColor
+from .exception import EmptyImageError
+from .exception import MissingFormatError
+from .exception import magick_raise
+from .exception import magick_try
+from .geometry import Rectangle
+from .geometry import Size
+from .geometry import origin
+from .pixel_view import PixelView
 
 try:
     import pathlib
