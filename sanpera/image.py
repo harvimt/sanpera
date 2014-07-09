@@ -512,6 +512,23 @@ class Image(object):
         # TODO i'm increasingly inclined to think this should be read off the
         # image on read and written back to the top frame on write.
         self._frames[0]._frame.depth = value
+    
+    @property
+    def colorspace(self):
+        from .constants import Colorspace
+        return Colorspace(self._stack.colorspace)
+    
+    @colorspace.setter
+    def colorspace(self, value):
+        from .constants import Colorspace
+        if not isinstance(value, Colorspace):
+            try:
+                value = Colorspace(value)
+            except ValueError:
+                value = Colorspace[value]
+        print(value)
+        
+        lib.TransformImageColorspace(self._stack, value)
 
     # TODO this will have to become a proxy thing for it to support assignment
     # TODO i am not a huge fan of this name, but 'metadata' is too expansive

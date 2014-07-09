@@ -414,8 +414,8 @@ typedef enum {
   YIQColorspace,
   YPbPrColorspace,
   YUVColorspace,
-  CMYKColorspace,           /* negared linear RGB with black separated */
-  sRGBColorspace,           /* Default: non-lienar sRGB colorspace */
+  CMYKColorspace,           /* negated linear RGB with black separated */
+  sRGBColorspace,           /* Default: non-linear sRGB colorspace */
   HSBColorspace,
   HSLColorspace,
   HWBColorspace,
@@ -425,6 +425,18 @@ typedef enum {
   Rec709YCbCrColorspace,
   LogColorspace,
   CMYColorspace,            /* negated linear RGB colorspace */
+  LuvColorspace,
+  HCLColorspace,
+  LCHColorspace,            /* alias for LCHuv */
+  LMSColorspace,
+  LCHabColorspace,          /* Cylindrical (Polar) Lab */
+  LCHuvColorspace,          /* Cylindrical (Polar) Luv */
+  scRGBColorspace,
+  HSIColorspace,
+  HSVColorspace,            /* alias for HSB */
+  HCLpColorspace,
+  YDbDrColorspace,
+  ...
 } ColorspaceType;
 
 MagickBooleanType RGBTransformImage(Image *, const ColorspaceType);
@@ -591,6 +603,7 @@ struct _Image {
 struct _ImageInfo {
 
     MagickBooleanType adjoin;
+	ColorspaceType colorspace;
 
     FILE *file;
 
