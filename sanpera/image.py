@@ -14,6 +14,12 @@ from sanpera.geometry import Size
 from sanpera.geometry import origin
 from sanpera.pixel_view import PixelView
 
+try:
+    import pathlib
+    HAS_PATHLIB = True
+except ImportError:
+    HAS_PATHLIB = False
+
 def blank_image_info():
     return ffi.gc(
         lib.CloneImageInfo(ffi.NULL),
@@ -237,7 +243,12 @@ class Image(object):
 
     @classmethod
     def read(cls, filename):
-        with open(filename, "rb") as fh:
+        if HAS_PATHLIB and isinstance(filename, pathlib.Path):
+            fh = filename.open('rb')
+        else:
+            fh = open(filename, "rb")
+        
+        with fh:
             image_info = blank_image_info()
             image_info.file = ffi.cast("FILE *", fh)
 
